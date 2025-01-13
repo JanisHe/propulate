@@ -519,7 +519,10 @@ class InitUniform(Stochastic):
                     else:  # Selecting one distinct value from ordinal parameters
                         position[limit] = self.rng.choice(self.limits[limit])  # type: ignore
                 elif isinstance(self.limits[limit][0], float):  # If interval trait of type float.
-                    position[limit] = self.rng.uniform(*self.limits[limit])
+                    if len(self.limits[limit]) == 2:
+                        position[limit] = self.rng.uniform(*self.limits[limit])
+                    else:
+                        position[limit] = self.rng.choice(self.limits[limit])
                 elif isinstance(self.limits[limit][0], str):  # If categorical trait of type string.
                     position[limit] = str(self.rng.choice(self.limits[limit]))
                 else:
