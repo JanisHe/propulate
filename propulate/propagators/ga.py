@@ -289,17 +289,14 @@ class IntervalMutationNormal(Stochastic):
             to_mutate: List[str] = self.rng.sample(interval_keys, self.points)
             # Mutate traits by sampling from Gaussian distribution centered around current value
             # with `sigma_factor` scaled interval width as standard distribution.
-            for key in to_mutate:  # If limits have more than two values, randomly select a value
-                if len(self.limits[key]) == 2:
-                    min_val, max_val = self.limits[key]  # Determine interval boundaries for continuous space (float or integer).
-                    sigma = (
-                        float(max_val) - float(min_val)
-                    ) * self.sigma_factor  # Determine std from interval boundaries and sigma factor.
-                    ind[key] = self.rng.gauss(float(ind[key]), sigma)  # Sample new value from Gaussian centered around current value.
-                    ind[key] = min(max_val, ind[key])  # Make sure new value is within specified limits.
-                    ind[key] = max(min_val, ind[key])
-                else:
-                    ind[key] = random.choice(self.limits[key])
+            for key in to_mutate:
+                min_val, max_val = self.limits[key]  # Determine interval boundaries.
+                sigma = (
+                    float(max_val) - float(min_val)
+                ) * self.sigma_factor  # Determine std from interval boundaries and sigma factor.
+                ind[key] = self.rng.gauss(float(ind[key]), sigma)  # Sample new value from Gaussian centered around current value.
+                ind[key] = min(max_val, ind[key])  # Make sure new value is within specified limits.
+                ind[key] = max(min_val, ind[key])
 
         return ind  # Return point-mutated individual.
 
