@@ -91,8 +91,11 @@ class PointMutation(Stochastic):
                     else:
                         ind[i] = self.rng.choice(self.limits[i])
                 elif isinstance(ind[i], float):
-                    # Return random floating point number within limits.
-                    ind[i] = self.rng.uniform(*self.limits[i])
+                    if len(self.limits[i]) == 2:
+                        # Return random floating point number within limits.
+                        ind[i] = self.rng.uniform(*self.limits[i])
+                    else:
+                        ind[i] = self.rng.choice(self.limits[i])
                 elif isinstance(ind[i], str):
                     # Return random element from non-empty sequence.
                     ind[i] = self.rng.choice(self.limits[i])
